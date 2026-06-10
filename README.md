@@ -6,3 +6,5 @@ Request -> checks availability -> Pay -> Checkout
 Ibrahim: Jira
 Filip: Project Idea
 Devaughn: Set up git hub
+
+
