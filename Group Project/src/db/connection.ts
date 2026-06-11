@@ -1,5 +1,12 @@
-import dotenv from "dotenv";
+import mysql from "mysql2/promise";
 
-dotenv.config();
+const pool = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "driveeasy",
+    waitForConnections: true,
+    connectionLimit: 10
+});
 
-// Database connection will be configured here
+export default pool;
