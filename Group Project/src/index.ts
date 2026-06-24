@@ -7,6 +7,10 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/", (_req, res) => {
+  res.send("DriveEasy API is running");
+});
+
 app.use("/cars", carRoutes);
 app.use("/users", userRoutes);
 app.use("/payments", paymentRoutes);
