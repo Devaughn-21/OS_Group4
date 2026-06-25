@@ -1,12 +1,16 @@
-import {Router, Request, Response} from "express";
-// import pool from "../db"; database connection
+import { Router, Request, Response } from "express";
+import pool from "../db";
 
 const router = Router();
 
-router.get("/rentals", (_req: Request, res: Response) => {
-    res.json({data: "Here is rental data"});
-})
-
-
+router.get("/", async (_req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM rentals");
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 
 export default router;
