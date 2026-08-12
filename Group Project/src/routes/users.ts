@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { ResultSetHeader } from "mysql2";
+import bcrypt from "bcrypt";
 import pool from "../db";
 
 const router = Router();
@@ -7,29 +8,40 @@ const router = Router();
 // GET all users
 router.get("/", async (_req: Request, res: Response) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.status(200).json(rows);
+    const [rows] = await pool.query(`
+      SELECT user_id, first_name, last_name, email, phone, license_number, created_at
+      FROM users
+    `);
+
+    return res.status(200).json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    return res.status(500).json({
+      error: "Database error",
+    });
   }
 });
 
 // POST create a new user
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { first_name, last_name, email, phone, license_number } = req.body;
+    const { first_name, last_name, email, phone, license_number, password } =
+      req.body;
 
-    if (!first_name || !last_name || !email || !license_number) {
+    if (!first_name || !last_name || !email || !license_number || !password) {
       return res.status(400).json({
-        error: "first_name, last_name, email, and license_number are required",
+        error:
+          "first_name, last_name, email, license_number, and password are required",
       });
     }
 
+    // Hash password before storing it in the database
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const sql = `
       INSERT INTO users
-      (first_name, last_name, email, phone, license_number)
-      VALUES (?, ?, ?, ?, ?)
+      (first_name, last_name, email, phone, license_number, password)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.execute<ResultSetHeader>(sql, [
@@ -38,10 +50,16 @@ router.post("/", async (req: Request, res: Response) => {
       email,
       phone || null,
       license_number,
+      hashedPassword,
     ]);
 
+    // Do not return password or password hash
     const [newUser] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
+      `
+      SELECT user_id, first_name, last_name, email, phone, license_number, created_at
+      FROM users
+      WHERE user_id = ?
+      `,
       [result.insertId],
     );
 
@@ -58,7 +76,9 @@ router.post("/", async (req: Request, res: Response) => {
       });
     }
 
-    return res.status(500).json({ error: "Database error" });
+    return res.status(500).json({
+      error: "Database error",
+    });
   }
 });
 
@@ -106,8 +126,13 @@ router.put("/:id", async (req: Request, res: Response) => {
       });
     }
 
+    // Do not return password or password hash
     const [updatedUser] = await pool.query(
-      "SELECT * FROM users WHERE user_id = ?",
+      `
+      SELECT user_id, first_name, last_name, email, phone, license_number, created_at
+      FROM users
+      WHERE user_id = ?
+      `,
       [userId],
     );
 
@@ -124,7 +149,9 @@ router.put("/:id", async (req: Request, res: Response) => {
       });
     }
 
-    return res.status(500).json({ error: "Database error" });
+    return res.status(500).json({
+      error: "Database error",
+    });
   }
 });
 
@@ -163,7 +190,9 @@ router.delete("/:id", async (req: Request, res: Response) => {
       });
     }
 
-    return res.status(500).json({ error: "Database error" });
+    return res.status(500).json({
+      error: "Database error",
+    });
   }
 });
 
