@@ -1,11 +1,12 @@
 import express from "express";
+import cors from "cors";
 import carRoutes from "./routes/cars";
 import userRoutes from "./routes/users";
 import paymentRoutes from "./routes/payments";
 import rentalRoutes from "./routes/rentals";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (_req, res) => {
