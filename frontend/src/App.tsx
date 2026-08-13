@@ -7,6 +7,7 @@ import { CarsPage } from "./pages/CarsPage";
 import { UsersPage } from "./pages/UsersPage";
 import { RentalsPage } from "./pages/RentalsPage";
 import { PaymentsPage } from "./pages/PaymentsPage";
+import { LoginPage } from "./pages/LoginPage";
 
 export default function App() {
   return (
@@ -15,14 +16,14 @@ export default function App() {
       <NavBar />
       <main className="app-main">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/cars" element={<CarsPage />} />
-          <Route path="/users" element={<UsersPage />} />
-          <Route path="/rentals" element={<RentalsPage />} />
-          <Route path="/payments" element={<PaymentsPage />} />
-          {/* Any unknown URL just falls back to the home page. */}
-          <Route path="*" element={<HomePage />} />
-        </Routes>
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/" element={<HomePage />} />
+  <Route path="/cars" element={<CarsPage />} />
+  <Route path="/users" element={<UsersPage />} />
+  <Route path="/rentals" element={<RentalsPage />} />
+  <Route path="/payments" element={<PaymentsPage />} />
+  <Route path="*" element={<HomePage />} />
+</Routes>
       </main>
     </div>
   );
