@@ -1,32 +1,27 @@
-# React + TypeScript + Vite
+## DriveEasy Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React + TypeScript single-page app for the DriveEasy car rental API (`../Group Project`). Built with Vite and React Router.
 
-Currently, two official plugins are available:
+## Running
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Start the backend API first (from `../Group Project`):
+   ```
+   npm install
+   npm run dev
+   ```
+   It listens on `http://localhost:3001` and requires a running MySQL instance with the `driveeasy` database.
 
-## React Compiler
+2. In this folder, install and start the frontend:
+   ```
+   npm install
+   npm run dev
+   ```
+   It listens on `http://localhost:5173` and talks to the API at `http://localhost:3001` by default. 
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- `src/api/`- typed fetch wrappers, one module per resource (`cars`, `users`, `rentals`, `payments`)
+- `src/types.ts`- shared TypeScript types matching the database schema
+- `src/components/<resource>/`- form + table components per resource
+- `src/pages/`- one page per route, wiring data loading and CRUD handlers to the components
+- `src/hooks/useFeedback.ts`- shared success/error banner state used on every page
