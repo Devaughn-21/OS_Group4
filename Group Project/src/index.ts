@@ -15,7 +15,9 @@ import { authenticateToken } from "./middleware/authMiddleware";
 
 const app = express();
 
-app.use(cors());
+app.set("trust proxy", 1);
+
+app.use(cors({ origin: process.env.FRONTEND_URL ?? "http://localhost:5173" }));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
@@ -33,6 +35,8 @@ app.use("/users", authenticateToken, userRoutes);
 app.use("/payments", authenticateToken, paymentRoutes);
 app.use("/rentals", authenticateToken, rentalRoutes);
 
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

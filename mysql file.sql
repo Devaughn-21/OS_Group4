@@ -13,6 +13,7 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     phone VARCHAR(20),
     license_number VARCHAR(50) NOT NULL,
+    password VARCHAR(255),
     created_at DATETIME DEFAULT NOW()
 );
 
